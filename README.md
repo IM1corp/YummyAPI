@@ -5,6 +5,8 @@ This is a wrapper around [yummyanime API](https://yummyani.me/api), written in P
 # Installation
 ```bash
 pip install yummyanime
+#OR
+pip install git+https://github.com/IM1corp/YummyAPI
 ```
 
 # Getting started

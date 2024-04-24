@@ -2,3 +2,4 @@
 build
 dist
 .idea
+./src/yummyanime.egg-info
