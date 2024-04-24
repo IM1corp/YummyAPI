@@ -1,6 +1,6 @@
 import unittest
 
-from src import YummyApi, Format
+from yummyanime import YummyApi, Format
 
 api = YummyApi(
     'g3qge9dzo8sklv50',

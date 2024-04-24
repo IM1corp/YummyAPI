@@ -1,3 +1,3 @@
 python -m build
 pip install .
-python -c "import yummyanime"
+python ./tests/api.py
