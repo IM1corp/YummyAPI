@@ -6,7 +6,7 @@ import json5
 
 from .enums import Format
 from .exceptions import YummyAPIError, YummyError, YummyRateLimitError, YummyNotFoundError, YummyResponseParseFailed
-from .routes import Anime
+from .routes import Anime, Users
 from .structs import YummyAnswer, Timing, AbsDict
 
 
@@ -41,6 +41,7 @@ class YummyApi:
         self._accept = accept
         self._custom_headers = custom_headers or {}
         self.anime = Anime(self)
+        self.users = Users(self)
         self.token = user_token
 
     async def method(self, path: str, method: str, data: dict | None = None, retry_count: int = 3,

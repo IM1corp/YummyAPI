@@ -1,5 +1,3 @@
-
-VERSION=$1
-sed -i "s/__version__ = .*/__version__ = '$VERSION'/g" src/yummyanime/__init__.py
-sed -i "s/version = .*/version = \"$VERSION\"/g" ./pyproject.toml
+export $(cat .env | xargs)
 python3 -m twine upload dist/*
+cd .aur/python-yummyanime && git push origin master

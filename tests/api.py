@@ -7,7 +7,7 @@ api = YummyApi(
     format=Format.JSON,
     custom_headers=None,
     user_token=None,
-    # api_gateway="http://test.yummy-anime.ru/api",
+    api_gateway="http://test.yummy-anime.ru/api",
 )
 
 
@@ -28,7 +28,9 @@ class YummyApiTEST(unittest.IsolatedAsyncioTestCase):
         print("Link to p720 url:", qualities.p720)
         self.assertIn('m3u8', qualities.p720.url)
         print("URL parsing is working")
-
+    async def test_users(self):
+        data = await api.users.get(1)
+        self.assertEqual(data.response.nickname, "root")
 
 if __name__ == '__main__':
     unittest.main()

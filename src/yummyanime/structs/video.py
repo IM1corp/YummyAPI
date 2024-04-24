@@ -9,7 +9,6 @@ from ..parsers.abstract_parser import Qualities
 if typing.TYPE_CHECKING:
     from .anime import IAnimeJson
 
-
 class VideoData(AbsDict):
     player: str
     dubbing: str
