@@ -6,9 +6,11 @@ from .video import IAnimeVideo
 class IPosterJson(AbsDict):
     def __init__(self, data: dict = {}, **kwargs):
         for i in data.copy():
-            if data[i].startswith('//'): data[i] = 'https:' + data[i]
+            if data[i].startswith('//'):
+                data[i] = 'https:' + data[i]
         for i in kwargs:
-            if kwargs[i].startswith('//'): kwargs[i] = 'https:' + data[i]
+            if kwargs[i].startswith('//'):
+                kwargs[i] = 'https:' + data[i]
         super().__init__(data, **kwargs)
 
     """
@@ -24,7 +26,7 @@ class IPosterJson(AbsDict):
     """
     big: str
     """
-    Fullsize: maximum dimensions    
+    Fullsize: maximum dimensions
     """
     fullsize: str
     """
@@ -66,16 +68,27 @@ class UserListResponse(AbsDict):
 class AnimeRemoteIds(AbsDict):
     """
     A class to represent the remote IDs of an anime from various sources.
+
+    Attributes:
+        worldart_id (int): The ID of the anime on World Art.
+        worldart_type (WorldartType | None): The type of the anime on World Art.
+        It's an instance of the `WorldartType` enum.
+        shikimori_id (int): The ID of the anime on Shikimori.
+        sr_id (int | None): The ID of the anime on SovetRomantica.
+        kp_id (int | None): The ID of the anime on Kinopoisk.
+        myanimelist_id (int | None): The ID of the anime on MyAnimeList.
+        anilibria_alias (str | None): The alias of the anime on Anilibria.
+        anidub_id (int | None): The ID of the anime on AniDub.
     """
 
-    worldart_id: int  # The ID of the anime on World Art.
-    worldart_type: WorldartType = None  # The type of the anime on World Art. It's an instance of the `WorldartType` enum.
-    shikimori_id: int  # The ID of the anime on Shikimori.
-    sr_id: int = None  # The ID of the anime on SovetRomantica.
-    kp_id: int = None  # The ID of the anime on Kinopoisk.
-    myanimelist_id: int = None  # The ID of the anime on MyAnimeList.
-    anilibria_alias: str = None  # The alias of the anime on Anilibria.
-    anidub_id: int = None  # The ID of the anime on AniDub.
+    worldart_id: int
+    worldart_type: WorldartType | None = None
+    shikimori_id: int
+    sr_id: int | None = None
+    kp_id: int | None = None
+    myanimelist_id: int | None = None
+    anilibria_alias: str | None = None
+    anidub_id: int = None
 
     @property
     def worldart_url(self):

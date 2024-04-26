@@ -4,3 +4,5 @@ dist
 .idea
 ./src/yummyanime.egg-info
 .env
+.vscode
+__pycache__

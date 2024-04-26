@@ -1,5 +1,15 @@
-from ._abs import *
-from ..structs import IOneAnimeJson, YummyAnswer, ITrailerJson, AnimeRateResponse, IAnimeRateResponse, UserListResponse
+from ._abs import (
+    IApiMethods
+)
+
+from ..structs import (
+    IOneAnimeJson,
+    YummyAnswer,
+    ITrailerJson,
+    AnimeRateResponse,
+    IAnimeRateResponse,
+    UserListResponse
+)
 
 
 class AnimeList(IApiMethods):

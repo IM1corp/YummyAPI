@@ -9,6 +9,8 @@ pip install yummyanime
 pip install git+https://github.com/IM1corp/YummyAPI
 #OR using aur (on arch)
 yay -S python-yummyanime
+#OR using poetry
+poetry add yummyanime
 ```
 
 # Getting started

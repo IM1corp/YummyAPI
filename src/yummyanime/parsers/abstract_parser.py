@@ -77,7 +77,8 @@ class AbstractParser(ABC):
         return src
 
     async def load_frame_from_url(self, url: str, ref: str = None):
-        if ref is None: ref = self.url_from
+        if ref is None:
+            ref = self.url_from
         url = self.get_good_src(url, '')
         async with self.request.get(url, headers={
             'Referer': ref,
