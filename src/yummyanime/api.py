@@ -163,6 +163,7 @@ class YummyApi:
                 return [YummyApi._parse_type(i, None) for i in ans]
             return AbsDict(ans)
         if isinstance(ans, list):
-            if not type.__args__: raise ValueError(f"Type {type} is not a list")
+            if not type.__args__:
+                raise ValueError(f"Type {type} is not a list")
             return [YummyApi._parse_type(i, type.__args__[0]) for i in ans]
         return type(ans)

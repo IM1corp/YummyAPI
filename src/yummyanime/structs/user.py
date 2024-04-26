@@ -24,9 +24,11 @@ class UserRole(Enum):
 class UserAvatars(AbsDict):
     def __init__(self, data: dict = {}, **kwargs):
         for i in data.copy():
-            if data[i].startswith('//'): data[i] = 'https:' + data[i]
+            if data[i].startswith('//'):
+                data[i] = 'https:' + data[i]
         for i in kwargs:
-            if kwargs[i].startswith('//'): kwargs[i] = 'https:' + data[i]
+            if kwargs[i].startswith('//'):
+                kwargs[i] = 'https:' + data[i]
         super().__init__(data, **kwargs)
 
     small: str

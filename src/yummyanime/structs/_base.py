@@ -1,4 +1,3 @@
-import re
 import typing
 import warnings
 
@@ -6,7 +5,7 @@ import warnings
 class AbsDict:
     __annotations__ = {}
 
-    def __init__(self, __data: dict={}, **kwargs):
+    def __init__(self, __data: dict = {}, **kwargs):
         data = {**__data, **kwargs}
         self._parse_annotations(data)
 
@@ -27,7 +26,8 @@ class AbsDict:
             setattr(self, self.format_name(i), self._format(annotations, i, data[i]))
 
     def _format(self, annotations: dict, name: str, element: typing.Any):
-        if element is None: return None
+        if element is None:
+            return None
         if name in annotations:
             if isinstance(element, list) and annotations[name] is not list and annotations[name].__args__:
                 annotations_new = {'z': annotations[name].__args__[0]}
@@ -47,16 +47,19 @@ class AbsDict:
         if i == 'class':
             return '_class'
         return i
+
     def __repr__(self):
         def format_it(value=None):
             if isinstance(value, AbsDict):
                 return value.__repr__()
             if isinstance(value, list):
-                if not value: return f'[]'
+                if not value:
+                    return '[]'
                 return f'[{", ".join([format_it(q) for q in value])}]'
             return repr(value)
 
-        return f'''{self.__class__.__name__}({', '.join([f'{j}={format_it(getattr(self, j))}' for j in self.__dict__])})'''
+        return f'''{self.__class__.__name__}({', '.join([f'{j}={format_it(getattr(self, j))}'
+                                                            for j in self.__dict__])})'''
 
     def __str__(self, i=0):
 
@@ -66,15 +69,16 @@ class AbsDict:
             if isinstance(value, AbsDict):
                 return value.__str__(i + 1)
             if isinstance(value, list):
-                if not value: return f'[]'
+                if not value:
+                    return '[]'
                 return f'[\n{tabs}{sep.join([format_it(i + 1, q) for q in value])}\n{tabs[:-1]}]'
             return repr(value)
         tabs = ('\t' * (i + 1))
         sep = ',\n' + tabs
 
         return f'''{self.__class__.__name__}(
-{tabs}{sep.join([f'{j}={format_it(i, getattr(self, j))}' for j in self.__dict__])}
-{tabs[:-1]})'''
+                   {tabs}{sep.join([f'{j}={format_it(i, getattr(self, j))}' for j in self.__dict__])}
+                   {tabs[:-1]})'''
 
 
 class Timing:
@@ -94,4 +98,3 @@ class YummyAnswer(typing.Generic[T]):
     def __init__(self, data: T, timings: list[Timing] = None):
         self.response = data
         self.timings = timings or []
-

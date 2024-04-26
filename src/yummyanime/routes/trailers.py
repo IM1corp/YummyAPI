@@ -8,5 +8,3 @@ class ITrailerJson(AbsDict):
     dubbing: str
     player: str
     number: str
-
-
