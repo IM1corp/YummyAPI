@@ -1,5 +1,5 @@
 import asyncio
-from typing import Any, Callable
+from typing import Any, Callable, Optional, Union
 
 import aiohttp
 import json5
@@ -23,7 +23,7 @@ class YummyApi:
             api_gateway='https://api.yani.tv',
             accept: str = 'image/avif,image/webp',
             custom_headers: dict = None,
-            user_token: str | None = None
+            user_token: Optional[str] = None
     ):
         """
         Initializes a new instance of the YummyApi class.
@@ -44,7 +44,7 @@ class YummyApi:
         self.users = Users(self)
         self.token = user_token
 
-    async def method(self, path: str, method: str, data: dict | None = None, retry_count: int = 3,
+    async def method(self, path: str, method: str, data: Optional[dict] = None, retry_count: int = 3,
                      type: Any = None) -> Any:
         """
         Makes an HTTP request to the specified path.
@@ -157,7 +157,7 @@ class YummyApi:
         return answers
 
     @staticmethod
-    def _parse_type(ans: dict | list, type: Any):
+    def _parse_type(ans: Union[dict, list], type: Any):
         if not type:
             if isinstance(ans, list):
                 return [YummyApi._parse_type(i, None) for i in ans]

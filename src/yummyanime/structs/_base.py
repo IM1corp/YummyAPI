@@ -11,7 +11,7 @@ class AbsDict:
         self._parse_annotations(data)
 
     @classmethod
-    def get_annotations(cls):
+    def _get_annotations(cls):
         d = {}
         for c in cls.mro():
             try:
@@ -22,18 +22,25 @@ class AbsDict:
         return d
 
     def _parse_annotations(self, data: dict):
-        annotations = self.get_annotations()
+        annotations = self._get_annotations()
         for i in data:
-            setattr(self, self.format_name(i), self._format(annotations, i, data[i]))
+            name = self._format_name(i)
+            setattr(self, name, self._format(annotations, name, data[i]))
 
     def _format(self, annotations: dict, name: str, element: typing.Any):
         if element is None: return None
         if name in annotations:
-            if isinstance(element, list) and annotations[name] is not list and annotations[name].__args__:
-                annotations_new = {'z': annotations[name].__args__[0]}
+            val = annotations[name]
+            # check if is instance of Optional[T]
+            if hasattr(val, '__origin__') and val.__origin__ is typing.Union:
+                val = typing.get_args(val)[0]
+            if isinstance(element, list) and val is not list and val.__args__:
+                annotations_new = {'z': val.__args__[0]}
                 name = 'z'
                 return [self._format(annotations_new, name, i) for i in element]
-            return annotations[name](element)
+            return val(element)
+        else:
+            warnings.warn(f"Unknown type for {name} in {self.__class__.__name__}")
         if isinstance(element, (str, int, float)):
             return element
         elif isinstance(element, dict):
@@ -43,7 +50,7 @@ class AbsDict:
         return element
 
     @staticmethod
-    def format_name(i):
+    def _format_name(i):
         if i == 'class':
             return '_class'
         return i

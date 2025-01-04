@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 from ._abs import *
-from ..structs import IOneAnimeJson, YummyAnswer, ITrailerJson, AnimeRateResponse, IAnimeRateResponse, UserListResponse
+from ..structs import *
 
 
 class AnimeList(IApiMethods):
@@ -35,14 +37,22 @@ class Trailers(IApiMethods):
     async def get(self, anime_id: int):
         return await self.method(f'/anime/{anime_id}/trailers', 'GET', type=list[ITrailerJson])
 
-
+class Genres(IApiMethods):
+    async def get_by_id(self, genre_id: int) -> YummyAnswer[IGenreJsonFull]:
+        return await self.method(f'/anime/genres/{genre_id}', 'GET', type=IGenreJsonFull)
+    async def get_all(self):
+        return await self.method('/anime/genres', 'GET', type=AnimeGenresResponse)
 class Anime(IApiMethods):
     def __init__(self, api: 'YummyApi'):
         super().__init__(api)
         self.list = AnimeList(self.api)
         self.rate = AnimeRate(self.api)
         self.trailers = Trailers(self.api)
-
+        self.genres = Genres(self.api)
+    async def get_schedule(self) :
+        return await self.method('/anime/schedule', 'GET', type=list[AnimeSchedule])
+    async def get_type_counts(self) -> YummyAnswer[list[AnimeTypesCountsResponse]]:
+        return await self.method('/anime/types', 'GET', type=list[AnimeTypesCountsResponse])
     async def get(self, id: str | int, need_videos: bool = False) -> YummyAnswer[IOneAnimeJson | None]:
         return await self.method(
             f'/anime/{id}', 'GET', {} if not need_videos else {'need_videos': 1},

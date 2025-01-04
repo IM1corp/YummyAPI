@@ -1,4 +1,5 @@
 from abc import ABC
+from typing import Optional
 from urllib.parse import urlparse, urljoin
 
 import aiohttp
@@ -17,30 +18,31 @@ class Qualities:
     def __init__(self):
         self.p360 = self.p720 = self.p480 = self.p1080 = None
 
-    p360: Quality | None
-    p480: Quality | None
-    p720: Quality | None
-    p1080: Quality | None
-    p240: Quality | None
+    p360: Optional[Quality]
+    p480: Optional[Quality]
+    p720: Optional[Quality]
+    p1080: Optional[Quality]
+    p240: Optional[Quality]
 
     def set(self, key: str, q: Quality):
-        match key:
-            case '240':
-                self.p240 = q
-                return
-            case "360":
-                self.p360 = q
-                return
-            case "480":
-                self.p480 = q
-                return
-            case "720":
-                self.p720 = q
-                return
-            case "1080":
-                self.p1080 = q
-                return
-        raise KeyError(f"Key {key} not found in qualities")
+
+        if key == '240':
+            self.p240 = q
+            return
+        elif key == '360':
+            self.p360 = q
+            return
+        elif key == '480':
+            self.p480 = q
+            return
+        elif key == '720':
+            self.p720 = q
+            return
+        elif key == '1080':
+            self.p1080 = q
+            return
+        else:
+            raise KeyError(f"Key {key} not found in qualities")
 
     def __str__(self):
         return f'Qualities (360="{self.p360}", 480="{self.p480}", 720="{self.p720}", 1080="{self.p1080}")'

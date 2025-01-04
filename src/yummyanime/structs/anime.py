@@ -1,3 +1,5 @@
+from typing import Optional
+
 from ._base import AbsDict
 from ._enums import AnimeStatus, IAnimeType, WorldartType
 from .video import IAnimeVideo
@@ -42,6 +44,12 @@ class IPosterJson(AbsDict):
         }
 
     def for_size(self, width: int, height: int):
+        """
+        Returns the URL of the poster for the specified size.
+        If the specified size is not available, it returns the fullsize.
+        :param width: The width of the poster.
+        :param height: The height of the poster.
+        """
         for i in self.sizes:
             if i[0] >= width - 5 and i[1] >= height - 5:
                 return self.sizes[i]
@@ -51,6 +59,12 @@ class IPosterJson(AbsDict):
 class AnimeRating(AbsDict):
     counters: int
     average: float
+
+    worldart_rating: Optional[float] = None
+    shikimori_rating: Optional[float] = None
+    kp_rating: Optional[float] = None
+    myanimelist_rating: Optional[float] = None
+    anidub_rating: Optional[float] = None
 
 
 class IAnimeRateResponse(AbsDict):
@@ -68,17 +82,18 @@ class AnimeRemoteIds(AbsDict):
     A class to represent the remote IDs of an anime from various sources.
     """
 
-    worldart_id: int  # The ID of the anime on World Art.
-    worldart_type: WorldartType = None  # The type of the anime on World Art. It's an instance of the `WorldartType` enum.
-    shikimori_id: int  # The ID of the anime on Shikimori.
-    sr_id: int = None  # The ID of the anime on SovetRomantica.
-    kp_id: int = None  # The ID of the anime on Kinopoisk.
-    myanimelist_id: int = None  # The ID of the anime on MyAnimeList.
-    anilibria_alias: str = None  # The alias of the anime on Anilibria.
-    anidub_id: int = None  # The ID of the anime on AniDub.
+    worldart_id: Optional[int]  # The ID of the anime on World Art.
+    worldart_type: Optional[
+        WorldartType] = None  # The type of the anime on World Art. It's an instance of the `WorldartType` enum.
+    shikimori_id: Optional[int]  # The ID of the anime on Shikimori.
+    sr_id: Optional[int] = None  # The ID of the anime on SovetRomantica.
+    kp_id: Optional[int] = None  # The ID of the anime on Kinopoisk.
+    myanimelist_id: Optional[int] = None  # The ID of the anime on MyAnimeList.
+    anilibria_alias: Optional[str] = None  # The alias of the anime on Anilibria.
+    anidub_id: Optional[int] = None  # The ID of the anime on AniDub.
 
     @property
-    def worldart_url(self):
+    def worldart_url(self) -> Optional[str]:
         """
         Generates the URL for the anime on World Art based on the `worldart_id` and `worldart_type`.
         If the `worldart_id` or `worldart_type` is not available, it returns `None`.
@@ -88,7 +103,7 @@ class AnimeRemoteIds(AbsDict):
         return None
 
     @property
-    def shikimori_url(self):
+    def shikimori_url(self) -> Optional[str]:
         """
         Generates the URL for the anime on Shikimori based on the `shikimori_id`.
         If the `shikimori_id` is not available, it returns `None`.
@@ -98,7 +113,7 @@ class AnimeRemoteIds(AbsDict):
         return None
 
     @property
-    def sr_url(self):
+    def sr_url(self) -> Optional[str]:
         """
         Generates the URL for the anime on SovetRomantica based on the `sr_id`.
         If the `sr_id` is not available, it returns `None`.
@@ -108,7 +123,7 @@ class AnimeRemoteIds(AbsDict):
         return None
 
     @property
-    def anilibria_url(self):
+    def anilibria_url(self) -> Optional[str]:
         """
         Generates the URL for the anime on Anilibria based on the `anilibria_alias`.
         If the `anilibria_alias` is not available, it returns `None`.
@@ -118,7 +133,7 @@ class AnimeRemoteIds(AbsDict):
         return None
 
     @property
-    def kinopoisk_url(self):
+    def kinopoisk_url(self) -> Optional[str]:
         """
         Generates the URL for the anime on Kinopoisk based on the `kp_id`.
         If the `kp_id` is not available, it returns `None`.
@@ -128,7 +143,7 @@ class AnimeRemoteIds(AbsDict):
         return None
 
     @property
-    def myanimelist_url(self):
+    def myanimelist_url(self) -> Optional[str]:
         """
         Generates the URL for the anime on MyAnimeList based on the `myanimelist_id`.
         If the `myanimelist_id` is not available, it returns `None`.
@@ -140,25 +155,36 @@ class AnimeRemoteIds(AbsDict):
 
 class AnimeMinAge(AbsDict):
     value: int
-    title: str = None
+    title: Optional[str] = None
+    titleLong: Optional[str] = None
 
 
 class AnimeEpisodes(AbsDict):
     aired: int
     count: int
+    next_date: Optional[int] = None
+
+
+class IListStatus(AbsDict):
+    title: str
+    href: str
+    id: int
 
 
 class IListFav(AbsDict):
-    title: str
-    href: str
-    _class: str
-    id: str
-    icon: str
+    pass
+    # title: str
+    # href: str
+    # _class: str
+    # id: str
+    # icon: str
+    is_fav: bool
+    list: Optional[IListStatus] = None
 
 
 class UserList(AbsDict):
     is_fav: bool
-    list: IListFav = None
+    list: Optional[IListFav] = None
 
 
 class IUserAnimeInfo(AbsDict):
@@ -170,7 +196,7 @@ class IAnimeStatus(AbsDict):
     value: int
     alias: AnimeStatus
     title: str
-    class_: str
+    _class: str
 
 
 class IAnimeJson(AbsDict):
@@ -194,7 +220,7 @@ class IOneAnimeSmallJson(IAnimeJson):
     user: IUserAnimeInfo
     type: IAnimeType
     views: int
-    rating: AnimeRating = None
+    rating: Optional[AnimeRating] = None
 
 
 class IAnimeVideoPreview(IAnimeJson):
@@ -233,34 +259,63 @@ class IViewingOrderData(AbsDict):
 
 
 class IAnimeViewingOrder(IAnimeJson):
-
     data: IViewingOrderData
     anime_status: IAnimeStatus
     type: IAnimeType
     year: int
     user: IUserAnimeInfoList
+    rating: Optional[float] = None
 
 
+class ScreenshotSizes(AbsDict):
+    """
+    Small: 250x150px
+    """
+    small: str
+    """
+    Full HD
+    """
+    full: str
+
+
+class RandomScreenshot(AbsDict):
+    episode: str
+    time: int
+    sizes: ScreenshotSizes
+    id: int
+
+
+class ITranslate(AbsDict):
+    value: int
+    title: str
+    href: str
+
+class AnimeSchedule(IAnimeJson):
+    episodes: AnimeEpisodes
 class IOneAnimeJson(IOneAnimeSmallJson):
     original: str
     other_titles: list
     rating: AnimeRating
-    worldart_rating: float
-    shikimori_rating: float
-    kp_rating: float
-    myanimelist_rating: float
-    anidub_rating: float
+
+    # kp_rating: float
+    # myanimelist_rating: float
     remote_ids: AnimeRemoteIds
     creators: list[IAnimeCreator]
     studios: list[IAnimeStudio]
-    videos: list[IAnimeVideo] = None
+    videos: Optional[list[IAnimeVideo]] = None
     genres: list[IAnimeGenre]
     viewing_order: list[IAnimeViewingOrder]
-    translates: list
-    blocked_in: list
+    translates: list[ITranslate]
+    blocked_in: list[str]
     episodes: AnimeEpisodes
+    random_screenshots: list[RandomScreenshot]
+    reviews_count: int
+    comments_count: int
 
 
 class AnimeRateResponse(AbsDict):
     rating: float
     votes: int
+class AnimeTypesCountsResponse:
+    type: IAnimeType
+    count: int

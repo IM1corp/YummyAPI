@@ -1,5 +1,7 @@
 from enum import Enum
 
+from .anime import IAnimeType
+
 from ._base import AbsDict
 
 
@@ -43,8 +45,15 @@ class UserIds(AbsDict):
     vk: int = None
     tg_nickname: str = None
     shikimori: ShikimoriData = None
-
-
+class IAnimeTypeWithSpentTime(IAnimeType):
+    spent_time: int
+class IHistoryView(AbsDict):
+    when: int
+    ep_count: int
+    duration: int
+class IUserWatches(AbsDict):
+    sum: list[IAnimeTypeWithSpentTime]
+    history: list[IHistoryView]
 class IUser(AbsDict):
     bdate: int
     id: int
@@ -58,3 +67,6 @@ class IUser(AbsDict):
     nickname: str
     banned: bool
     ids: UserIds
+
+    watches: IUserWatches
+    days_online: int

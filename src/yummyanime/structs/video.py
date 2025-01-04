@@ -1,4 +1,5 @@
 import typing
+from typing import Optional
 
 import aiohttp
 
@@ -9,9 +10,20 @@ from ..parsers.abstract_parser import Qualities
 if typing.TYPE_CHECKING:
     from .anime import IAnimeJson
 
+
 class VideoData(AbsDict):
     player: str
     dubbing: str
+
+
+class SkipTime(AbsDict):
+    time: int
+    length: int
+
+
+class IAnimeSkips(AbsDict):
+    opening: Optional[SkipTime]
+    ending: Optional[SkipTime]
 
 
 class IAnimeVideo(AbsDict):
@@ -25,6 +37,7 @@ class IAnimeVideo(AbsDict):
     date: int
     iframe_url: str
     index: int
+    skips: IAnimeSkips
 
     async def qualities(self, anime: 'IAnimeJson') -> Qualities:
         if not hasattr(self, '__qualities'):
