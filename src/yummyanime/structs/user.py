@@ -1,3 +1,4 @@
+import warnings
 from enum import Enum
 
 from .anime import IAnimeType
@@ -18,6 +19,14 @@ class UserRole(Enum):
     VIDEOBLOGGER = 'videoblogger'
     CHATADMIN = 'chatadmin'
     REVIEWER = 'reviewer'
+    ADMIN = 'admin'
+    OTHER = 'other'
+    NEWSROOM = 'newsroom'
+    @classmethod
+    def _missing_(cls, value):
+        warnings.warn(f'Unknown UserRole: {value}')
+        return cls.OTHER
+
 
     def __repr__(self):
         return f'UserRole("{self.value}")'
@@ -73,3 +82,15 @@ class IUser(AbsDict):
 
     watches: IUserWatches
     days_online: int
+
+class UserSort(Enum):
+    ALPHABET = 'a_z'
+    ALPHABET_REVERSE = 'z_a'
+    REGDATE_ASC = 'regdate_asc'
+    REGDATE_DESC = 'regdate_desc'
+    LASTONLINE_ASC = 'lastonline_asc'
+    LASTONLINE_DESC = 'lastonline_desc'
+class UsersResponse(AbsDict):
+    items: list[IUser]
+    limit: int
+    offset: int

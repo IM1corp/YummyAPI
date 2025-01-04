@@ -1,6 +1,11 @@
+import asyncio
 import unittest
 
 from yummyanime import YummyApi, Format
+
+from yummyanime.structs import UserRole
+
+from yummyanime import YummyAPIError
 
 api = YummyApi(
     'g3qge9dzo8sklv50',
@@ -75,10 +80,43 @@ class YummyApiTEST(unittest.IsolatedAsyncioTestCase):
         data = await api.anime.feed()
         self.assertIsNotNone(data.response)
         self.assertGreaterEqual(len(data.response.new), 1)
+
     async def test_user_reviews(self):
         data = await api.reviews.get_by_user(888)
         self.assertIsNotNone(data.response)
         self.assertGreaterEqual(len(data.response), 1)
+
+    async def test_check_user_exists(self):
+        data = await api.users.check_exists(user_id=1)
+        self.assertTrue(data.response)
+        not_exists = await api.users.check_exists(user_id=999999)
+        self.assertFalse(not_exists.response)
+
+    async def test_users_filters(self):
+        data = await api.users.filter(nickname="root")
+        self.assertIsNotNone(data.response)
+        self.assertGreaterEqual(len(data.response.items), 1)
+        self.assertEqual(data.response.items[0].nickname, "root")
+        datagroups = await api.users.filter(groups=[UserRole.ADMIN])
+        self.assertIsNotNone(datagroups.response)
+        self.assertGreaterEqual(len(datagroups.response.items), 1)
+        for i in datagroups.response.items:
+            self.assertIn(UserRole.ADMIN, i.roles)
+
+    async def asyncSetUp(self):
+        self.loop = asyncio.new_event_loop()
+
+    async def asyncTearDown(self):
+        self.loop.close()
+
+    async def test_users_set_data(self):
+        try:
+            await api.users.set_user_data(1, nickname="root", roles=[UserRole.ADMIN])
+            self.assertTrue(False)
+
+        except YummyAPIError as e:
+            self.assertEqual(e.status_code, 3)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -128,10 +128,10 @@ class YummyApi:
             raise YummyResponseParseFailed(e)
 
         if 'error' in ans:
-            error = ans['error']
+            error = ans
             raise YummyAPIError(
-                error.get('message', ''), error.get('status_code', 0), error.get('title', 'Error'),
-                error.get('name', 'Undefined Error'), error.get('suberror_code', None)
+                error.get('error', ''), error.get('error_code', 0), error.get('error_title', 'Error'),
+                error.get('error_name', 'Undefined Error'), error.get('suberror_code', None)
             )
 
         timings = self._parse_server_timing(resp.headers.get('Server-Timing', ''))

@@ -7,3 +7,4 @@ from .blogger import *
 from .review import *
 from .post import *
 from .feed import AnimeFeedResponse
+from .user import *
