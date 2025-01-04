@@ -40,7 +40,8 @@ class AbsDict:
                 return [self._format(annotations_new, name, i) for i in element]
             return val(element)
         else:
-            warnings.warn(f"Unknown type for {name} in {self.__class__.__name__}")
+            if self.__class__ is not AbsDict:
+                warnings.warn(f"Unknown type for {name} in {self.__class__.__name__}")
         if isinstance(element, (str, int, float)):
             return element
         elif isinstance(element, dict):

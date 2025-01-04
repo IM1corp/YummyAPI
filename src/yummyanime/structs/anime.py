@@ -1,5 +1,4 @@
 from typing import Optional
-
 from ._base import AbsDict
 from ._enums import AnimeStatus, IAnimeType, WorldartType
 from .video import IAnimeVideo
@@ -221,6 +220,7 @@ class IOneAnimeSmallJson(IAnimeJson):
     type: IAnimeType
     views: int
     rating: Optional[AnimeRating] = None
+    remote_ids: Optional[AnimeRemoteIds] = None
 
 
 class IAnimeVideoPreview(IAnimeJson):

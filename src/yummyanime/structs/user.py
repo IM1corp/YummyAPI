@@ -40,7 +40,10 @@ class ShikimoriData(AbsDict):
     nickname: str
     id: int
 
-
+class IUserJsonNicknameAndAva(AbsDict):
+    nickname: str
+    avatars: UserAvatars
+    id: int
 class UserIds(AbsDict):
     vk: int = None
     tg_nickname: str = None
